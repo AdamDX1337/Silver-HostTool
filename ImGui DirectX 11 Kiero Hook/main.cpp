@@ -253,7 +253,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 				
 		}
 		ImGui::Columns(1);
-		ImGui::SameLine();
+		//ImGui::SameLine();
 		//ImGui::Text("Mem Addresses");
 		/*ImGui::Text("");
 		ImGui::Columns(2);
