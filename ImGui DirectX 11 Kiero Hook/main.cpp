@@ -37,8 +37,8 @@ CSessionPost CSessionPostHook;
 CSessionPost CSessionPostTramp;
 
 typedef CCrash* (__fastcall* GetCCrash)(void* pThis, unsigned int a1);
-GetCCrash CCrashFunc;
-GetCCrash CCrashTramp;
+GetCCrash CCrashFixFunc;
+GetCCrash CCrashFixTramp;
 
 
 typedef CAiEnableCommand* (__fastcall* GetEnableAI)(void* pThis, int* tag, int toggled);
@@ -239,7 +239,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 		if (ImGui::Button("Disable", ImVec2(140, 28)) && pCSession != nullptr) {
 			if (isHost) {
 				CCrash* Disable = (CCrash*)GetCCommandFunc(48);
-				Disable = CCrashFunc(Disable, 0);
+				Disable = CCrashFixFunc(Disable, 0);
 				CSessionPostTramp(pCSession, Disable, true);
 			}
 		}
@@ -247,7 +247,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 		if (ImGui::Button("Enable", ImVec2(140, 28)) && pCSession != nullptr) {
 			if (isHost) {
 				CCrash* Enable = (CCrash*)GetCCommandFunc(48);
-				Enable = CCrashFunc(Enable, 28671);
+				Enable = CCrashFixFunc(Enable, 28671);
 				CSessionPostTramp(pCSession, Enable, true);
 			}
 				
@@ -411,7 +411,7 @@ CCrash* __fastcall hkCrash(void* pThis, unsigned int a1) {
 	}
 
 
-	return CCrashTramp(pThis, a1);
+	return CCrashFixTramp(pThis, a1);
 }
 
 bool calculateHostStatus(int value) {
@@ -450,9 +450,9 @@ void HookFunctions() {
 	MH_CreateHook(CGameStateSetPlayerHook, &hkCGameStateSetPlayer, (LPVOID*)&CGameStateSetPlayerTramp);
 	MH_EnableHook(CGameStateSetPlayerHook);
 	
-	CCrashFunc = GetCCrash(FindPattern(const_cast <char*>("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x00\x8B\xDA\x48\x8B\xF9\xE8\x00\x00\x00\x00\x33\xC9\x89\x5F\x00\x48\x8B\x5C\x24\x00\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x07\x48\x8B\xC7\x66\xC7\x47\x00\x00\x00\xC7\x47\x00\x00\x00\x00\x00\x89\x4F\x00\xC7\x47\x00\x00\x00\x00\x00\x66\x89\x4F\x00\x48\x89\x4F\x00\x48\x83\xC4\x00\x5F\xC3\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x00\x48\x8D\x05"), const_cast <char*>("xxxx?xxxx?xxxxxx????xxxx?xxxx?xxx????xxxxxxxxx???xx?????xx?xx?????xxx?xxx?xxx?xxxxxx?xxxx?xxx")));
-	MH_CreateHook(CCrashFunc, &hkCrash, (LPVOID*)&CCrashTramp);
-	MH_EnableHook(CCrashFunc);
+	CCrashFixFunc = GetCCrash(FindPattern(const_cast <char*>("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x00\x8B\xDA\x48\x8B\xF9\xE8\x00\x00\x00\x00\x33\xC9\x89\x5F\x00\x48\x8B\x5C\x24\x00\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x07\x48\x8B\xC7\x66\xC7\x47\x00\x00\x00\xC7\x47\x00\x00\x00\x00\x00\x89\x4F\x00\xC7\x47\x00\x00\x00\x00\x00\x66\x89\x4F\x00\x48\x89\x4F\x00\x48\x83\xC4\x00\x5F\xC3\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x00\x48\x8D\x05"), const_cast <char*>("xxxx?xxxx?xxxxxx????xxxx?xxxx?xxx????xxxxxxxxx???xx?????xx?xx?????xxx?xxx?xxx?xxxxxx?xxxx?xxx")));
+	MH_CreateHook(CCrashFixFunc, &hkCrash, (LPVOID*)&CCrashFixTramp);
+	MH_EnableHook(CCrashFixFunc);
 	
 	MultiConfigFunc = GetMultiplayerConfig(FindPattern(const_cast <char*>("\x48\x89\x5C\x24\x00\x48\x89\x6C\x24\x00\x48\x89\x4C\x24\x00\x56\x57\x41\x56\x48\x83\xEC\x00\x49\x8B\xF1\x49\x8B\xF8\x48\x8B\xDA\x48\x8B\xE9"), const_cast <char*>("xxxx?xxxx?xxxx?xxxxxxx?xxxxxxxxxxxx")));
 	MH_CreateHook(MultiConfigFunc, &hkMultiConfig, (LPVOID*)&MultiConfigTramp);
